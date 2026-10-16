@@ -14,11 +14,11 @@ mvn spring-boot:run
 ```
 Probar con `curl`:
 ```bash
-curl -s http://localhost:8080/blueprints | jq
-curl -s http://localhost:8080/blueprints/john | jq
-curl -s http://localhost:8080/blueprints/john/house | jq
-curl -i -X POST http://localhost:8080/blueprints -H 'Content-Type: application/json' -d '{ "author":"john","name":"kitchen","points":[{"x":1,"y":1},{"x":2,"y":2}] }'
-curl -i -X PUT  http://localhost:8080/blueprints/john/kitchen/points -H 'Content-Type: application/json' -d '{ "x":3,"y":3 }'
+curl -s http://localhost:8080/api/v1/blueprints | jq
+curl -s http://localhost:8080/api/v1/blueprints/john | jq
+curl -s http://localhost:8080/api/v1/blueprints/john/house | jq
+curl -i -X POST http://localhost:8080/api/v1/blueprints -H 'Content-Type: application/json' -d '{ "author":"john","name":"kitchen","points":[{"x":1,"y":1},{"x":2,"y":2}] }'
+curl -i -X PUT  http://localhost:8080/api/v1/blueprints/john/kitchen/points -H 'Content-Type: application/json' -d '{ "x":3,"y":3 }'
 ```
 
 Abrir en navegador:  
@@ -48,6 +48,14 @@ src/main/java/edu/eci/arsw/blueprints
 
 ### 1. Buenas prácticas de API REST (Path)
 - Cambia el path base de los controladores a `/api/v1/blueprints`.  
+
+Antes las peticiones se hacían a `/blueprints`. Ahora se hacen a `/api/v1/blueprints`, y ese
+cambio se hizo en el controlador cambiando lo que recibe `@RequestMapping`.
+
+La dirección quedó partida en tres partes: `/api` dice que esto es la API del sistema, `v1`
+es el número de versión, y `blueprints` es el recurso con el que se trabaja. Al llevar la
+versión dentro de la dirección, si más adelante se cambia la forma de responder se puede
+publicar una `v2` y dejar la `v1` funcionando, para que los que ya la usan no se rompan.
 
 ### 2. Buenas prácticas de API REST (Errores Http)
 - Usa **códigos HTTP** correctos:  
