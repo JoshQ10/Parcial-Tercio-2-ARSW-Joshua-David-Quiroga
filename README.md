@@ -64,6 +64,11 @@ publicar una `v2` y dejar la `v1` funcionando, para que los que ya la usan no se
   - `202 Accepted` (actualizaciones).  La petición PUT.
   - `400 Bad Request` (datos inválidos). Peticiones POST y PUT. 
   - `404 Not Found` (recurso inexistente o no se encuentra la data solicitada). Peticiones GET y PUT.
+
+Cada respuesta lleva un número que dice cómo le fue: 200 si la consulta salió bien, 201 si
+se creó algo, 202 si se aceptó el cambio, 400 si llegaron datos malos y 404 si lo que se
+pide no existe. Si se responde con otro número, quien usa la API no sabe qué pasó.
+
 ### 3. Buenas prácticas de API REST (Respuesta estandar)
 - Implementa una clase genérica de respuesta uniforme:
   ```java
