@@ -53,9 +53,7 @@ Antes las peticiones se hacían a `/blueprints`. Ahora se hacen a `/api/v1/bluep
 cambio se hizo en el controlador cambiando lo que recibe `@RequestMapping`.
 
 La dirección quedó partida en tres partes: `/api` dice que esto es la API del sistema, `v1`
-es el número de versión, y `blueprints` es el recurso con el que se trabaja. Al llevar la
-versión dentro de la dirección, si más adelante se cambia la forma de responder se puede
-publicar una `v2` y dejar la `v1` funcionando, para que los que ya la usan no se rompan.
+es el número de versión, y `blueprints` es el recurso con el que se trabaja.
 
 ### 2. Buenas prácticas de API REST (Errores Http)
 - Usa **códigos HTTP** correctos:  
@@ -84,7 +82,7 @@ pide no existe. Si se responde con otro número, quien usa la API no sabe qué p
   ```
 
 Todas las respuestas salen con esa misma forma: el código, un mensaje y los datos. Así
-quien usa la API siempre mira en el mismo lugar, sin importar si fue un GET, un POST o un
+sin importar quienn usa la API siempre mira en el mismo lugar, sin importar si fue un GET, un POST o un
 error. En los errores los datos quedan en `null`.
 
 ### 4. OpenAPI / Swagger
