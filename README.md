@@ -83,6 +83,10 @@ pide no existe. Si se responde con otro número, quien usa la API no sabe qué p
   }
   ```
 
+Todas las respuestas salen con esa misma forma: el código, un mensaje y los datos. Así
+quien usa la API siempre mira en el mismo lugar, sin importar si fue un GET, un POST o un
+error. En los errores los datos quedan en `null`.
+
 ### 4. OpenAPI / Swagger
 - Configura `springdoc-openapi` en el proyecto.  
 - Expón documentación automática en `/swagger-ui.html`.  

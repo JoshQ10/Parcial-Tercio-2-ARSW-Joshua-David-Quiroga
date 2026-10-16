@@ -1,5 +1,6 @@
 package edu.eci.arsw.blueprints.controllers;
 
+import edu.eci.arsw.blueprints.model.ApiResponse;
 import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -25,52 +25,37 @@ public class BlueprintsAPIController {
 
     // GET /api/v1/blueprints
     @GetMapping
-    public ResponseEntity<Set<Blueprint>> getAll() {
-        return ResponseEntity.ok(services.getAllBlueprints());
+    public ResponseEntity<ApiResponse<Set<Blueprint>>> getAll() {
+        return ResponseEntity.ok(ApiResponse.of(200, "execute ok", services.getAllBlueprints()));
     }
 
     // GET /api/v1/blueprints/{author}
     @GetMapping("/{author}")
-    public ResponseEntity<?> byAuthor(@PathVariable String author) {
-        try {
-            return ResponseEntity.ok(services.getBlueprintsByAuthor(author));
-        } catch (BlueprintNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<Set<Blueprint>>> byAuthor(@PathVariable String author) throws BlueprintNotFoundException {
+        return ResponseEntity.ok(ApiResponse.of(200, "execute ok", services.getBlueprintsByAuthor(author)));
     }
 
     // GET /api/v1/blueprints/{author}/{bpname}
     @GetMapping("/{author}/{bpname}")
-    public ResponseEntity<?> byAuthorAndName(@PathVariable String author, @PathVariable String bpname) {
-        try {
-            return ResponseEntity.ok(services.getBlueprint(author, bpname));
-        } catch (BlueprintNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<Blueprint>> byAuthorAndName(@PathVariable String author,
+                                                                  @PathVariable String bpname) throws BlueprintNotFoundException {
+        return ResponseEntity.ok(ApiResponse.of(200, "execute ok", services.getBlueprint(author, bpname)));
     }
 
     // POST /api/v1/blueprints
     @PostMapping
-    public ResponseEntity<?> add(@Valid @RequestBody NewBlueprintRequest req) {
-        try {
-            Blueprint bp = new Blueprint(req.author(), req.name(), req.points());
-            services.addNewBlueprint(bp);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (BlueprintPersistenceException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<Blueprint>> add(@Valid @RequestBody NewBlueprintRequest req) throws BlueprintPersistenceException {
+        Blueprint bp = new Blueprint(req.author(), req.name(), req.points());
+        services.addNewBlueprint(bp);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.of(201, "execute ok", bp));
     }
 
     // PUT /api/v1/blueprints/{author}/{bpname}/points
     @PutMapping("/{author}/{bpname}/points")
-    public ResponseEntity<?> addPoint(@PathVariable String author, @PathVariable String bpname,
-                                      @Valid @RequestBody NewPointRequest req) {
-        try {
-            services.addPoint(author, bpname, req.x(), req.y());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        } catch (BlueprintNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+    public ResponseEntity<ApiResponse<Void>> addPoint(@PathVariable String author, @PathVariable String bpname,
+                                                      @Valid @RequestBody NewPointRequest req) throws BlueprintNotFoundException {
+        services.addPoint(author, bpname, req.x(), req.y());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.of(202, "execute ok"));
     }
 
     public record NewPointRequest(
